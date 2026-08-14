@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { ArrowRight, Search, ShieldCheck } from 'lucide-react';
+import { ArrowRight, ShieldCheck } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface HeroProps {
   onInvestigate: (url: string) => void;
@@ -10,6 +11,7 @@ interface HeroProps {
 }
 
 export default function Hero({ onInvestigate, isLoading }: HeroProps) {
+  const { t } = useLanguage();
   const [urlInput, setUrlInput] = useState('');
   const heroRef = useRef<HTMLDivElement>(null);
   const headlineRef = useRef<HTMLHeadingElement>(null);
@@ -67,15 +69,15 @@ export default function Hero({ onInvestigate, isLoading }: HeroProps) {
         {/* Top Micro-Metadata Header */}
         <div className="hero-meta-stagger flex flex-wrap items-center justify-between gap-4 pb-8 mb-12 border-b border-border-hairline font-mono text-xs text-ink-muted">
           <div className="flex items-center gap-3">
-            <span className="text-acid font-bold">[ISSUE_01]</span>
+            <span className="text-acid font-bold">{t.hero.issueTag}</span>
             <span className="text-ink-dim">/</span>
-            <span>DIGITAL FORENSICS ARCHIVE</span>
+            <span>{t.hero.archiveTag}</span>
             <span className="text-ink-dim">/</span>
-            <span>AUGUST 2026</span>
+            <span>AGOSTO 2026</span>
           </div>
 
           <div className="hidden sm:flex items-center gap-4 text-[11px] text-ink-dim">
-            <span>SURFACE_SCAN: ACTIVE</span>
+            <span>{t.hero.systemActive}</span>
             <span>TOPOLOGY: 6-VECTORS</span>
             <span>ENGINE: HEURISTIC_v2</span>
           </div>
@@ -90,14 +92,14 @@ export default function Hero({ onInvestigate, isLoading }: HeroProps) {
               ref={headlineRef} 
               className="font-editorial text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black text-ink-headline tracking-tighter leading-[0.88] mb-8"
             >
-              <span className="hero-stagger block">Is this</span>
+              <span className="hero-stagger block">{t.hero.titleLine1}</span>
               <span className="hero-stagger block text-ink-headline">
                 <span className="text-acid">AI</span>?
               </span>
             </h1>
 
             <p className="hero-stagger font-body text-lg sm:text-xl md:text-2xl text-ink-body max-w-2xl font-light leading-relaxed mb-12">
-              Enter a website URL. We will dissect its source, analyze structural patterns, and output a forensic probability score of artificial generation.
+              {t.hero.description}
             </p>
 
             {/* Minimalist Investigative URL Form */}
@@ -112,7 +114,7 @@ export default function Hero({ onInvestigate, isLoading }: HeroProps) {
                   type="text"
                   value={urlInput}
                   onChange={(e) => setUrlInput(e.target.value)}
-                  placeholder="https://example.com or domain.com"
+                  placeholder={t.hero.inputPlaceholder}
                   disabled={isLoading}
                   required
                   className="w-full bg-transparent text-ink-headline placeholder-ink-dim focus:outline-none font-mono text-sm tracking-wide"
@@ -128,11 +130,11 @@ export default function Hero({ onInvestigate, isLoading }: HeroProps) {
                 {isLoading ? (
                   <>
                     <span className="w-3.5 h-3.5 border-2 border-bg-primary border-t-transparent rounded-full animate-spin" />
-                    <span>SCANNING...</span>
+                    <span>{t.hero.buttonScanning}</span>
                   </>
                 ) : (
                   <>
-                    <span>INVESTIGATE</span>
+                    <span>{t.hero.buttonInvestigate}</span>
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </>
                 )}
@@ -141,7 +143,7 @@ export default function Hero({ onInvestigate, isLoading }: HeroProps) {
 
             {/* Quick Probe Presets */}
             <div className="hero-stagger mt-5 flex flex-wrap items-center gap-2 font-mono text-[11px] text-ink-muted">
-              <span className="text-ink-dim">SAMPLE DOSSIERS:</span>
+              <span className="text-ink-dim">{t.hero.sampleDossiers}</span>
               {[
                 { label: 'stellar-studio.design', score: '84%' },
                 { label: 'modern-wealth.io', score: '78%' },
@@ -170,16 +172,16 @@ export default function Hero({ onInvestigate, isLoading }: HeroProps) {
             
             <div className="border-b border-border-hairline pb-6">
               <div className="text-[10px] text-acid uppercase font-bold tracking-widest mb-2">
-                [FORENSIC_MISSION]
+                {t.hero.missionTag}
               </div>
               <p className="text-ink-body leading-relaxed font-sans text-sm">
-                We don’t guess. We inspect public source trees, topological invariants, AST depths, and synthetic copywriting tropes.
+                {t.hero.missionText}
               </p>
             </div>
 
             <div className="space-y-3">
               <div className="text-[10px] text-ink-dim uppercase tracking-wider">
-                [VECTORS EVALUATED]
+                {t.hero.vectorsEvaluated}
               </div>
               <div className="grid grid-cols-2 gap-2 text-[11px]">
                 <div className="p-2 bg-bg-subtle border border-border-hairline flex items-center justify-between">
@@ -204,7 +206,7 @@ export default function Hero({ onInvestigate, isLoading }: HeroProps) {
             <div className="p-3 bg-bg-subtle border border-border-hairline text-[11px] leading-relaxed text-ink-muted flex items-start gap-2">
               <ShieldCheck className="w-4 h-4 text-acid shrink-0 mt-0.5" />
               <span>
-                Ethical Scanner: We inspect only publicly accessible surfaces with zero intrusive actions.
+                {t.hero.ethicalScanner}
               </span>
             </div>
 

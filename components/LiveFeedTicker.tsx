@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState, useRef } from 'react';
 import { RecentScanItem } from '@/lib/forensics/recent-scans';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface LiveFeedTickerProps {
   onSelectDomain: (domain: string) => void;
 }
 
 export default function LiveFeedTicker({ onSelectDomain }: LiveFeedTickerProps) {
+  const { t } = useLanguage();
   const [scans, setScans] = useState<RecentScanItem[]>([]);
   const [lastUpdatedId, setLastUpdatedId] = useState<string | null>(null);
   const prevTopIdRef = useRef<string | null>(null);
@@ -20,7 +22,6 @@ export default function LiveFeedTicker({ onSelectDomain }: LiveFeedTickerProps) 
         const items: RecentScanItem[] = data.scans || [];
         
         if (items.length > 0 && prevTopIdRef.current && items[0].id !== prevTopIdRef.current) {
-          // New scan detected!
           setLastUpdatedId(items[0].id);
           setTimeout(() => setLastUpdatedId(null), 2500);
         }
@@ -49,8 +50,8 @@ export default function LiveFeedTicker({ onSelectDomain }: LiveFeedTickerProps) 
         {/* Left Badge: Live Buffer Indicator */}
         <div className="flex items-center gap-2 text-ink-muted shrink-0 md:pr-6 md:border-r md:border-border-hairline">
           <span className="w-2 h-2 bg-acid rounded-full animate-ping" />
-          <span className="text-acid uppercase font-bold tracking-wider">LIVE FEED</span>
-          <span className="text-ink-dim">/ 4-SLOT FIFO BUFFER</span>
+          <span className="text-acid uppercase font-bold tracking-wider">{t.liveFeed.tag}</span>
+          <span className="text-ink-dim">{t.liveFeed.subTag}</span>
         </div>
 
         {/* 4 Slots Grid / Row */}
@@ -87,7 +88,7 @@ export default function LiveFeedTicker({ onSelectDomain }: LiveFeedTickerProps) 
                         : 'bg-white/5 text-ink-muted border border-border-hairline'
                     }`}
                   >
-                    {item.score}% AI
+                    {item.score}% {t.liveFeed.aiScore}
                   </span>
                 </div>
               </button>

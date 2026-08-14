@@ -3,12 +3,15 @@
 import React from 'react';
 import { FEATURED_INVESTIGATIONS } from '@/lib/forensics/presets';
 import { ArrowUpRight } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface LatestInvestigationsProps {
   onSelectInvestigation: (domain: string) => void;
 }
 
 export default function LatestInvestigations({ onSelectInvestigation }: LatestInvestigationsProps) {
+  const { t } = useLanguage();
+
   return (
     <section id="investigations" className="py-24 border-b border-border-hairline bg-bg-primary">
       <div className="max-w-[1500px] mx-auto px-6 md:px-12">
@@ -17,18 +20,18 @@ export default function LatestInvestigations({ onSelectInvestigation }: LatestIn
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-8 mb-16 border-b border-border-hairline">
           <div>
             <span className="font-mono text-xs text-acid tracking-widest uppercase font-semibold">
-              [DOSSIER ARCHIVE]
+              {t.latest.tag}
             </span>
             <h2 className="font-editorial text-4xl sm:text-5xl md:text-6xl font-black text-ink-headline tracking-tight mt-2">
-              LATEST INVESTIGATIONS
+              {t.latest.title}
             </h2>
           </div>
           <p className="font-mono text-xs text-ink-muted max-w-md">
-            Recent forensic autopsies conducted on public web surfaces. Scanned for generative AST patterns, lexical cadence and layout invariants.
+            {t.latest.subtitle}
           </p>
         </div>
 
-        {/* Magazine-Style Editorial List (No generic cards) */}
+        {/* Magazine-Style Editorial List */}
         <div className="space-y-16">
           {FEATURED_INVESTIGATIONS.map((preset, index) => {
             const num = (index + 1).toString().padStart(2, '0');
@@ -77,15 +80,15 @@ export default function LatestInvestigations({ onSelectInvestigation }: LatestIn
                     {/* Technical Micro Vectors */}
                     <div className="grid grid-cols-3 gap-4 pt-4 border-t border-border-hairline/60 font-mono text-xs text-ink-muted">
                       <div>
-                        <span className="text-ink-dim block text-[10px]">CODE AST</span>
+                        <span className="text-ink-dim block text-[10px]">{t.latest.codeAst}</span>
                         <span className="font-bold text-ink-headline">{res.vectors.code}%</span>
                       </div>
                       <div>
-                        <span className="text-ink-dim block text-[10px]">NAMING BEM</span>
+                        <span className="text-ink-dim block text-[10px]">{t.latest.namingBem}</span>
                         <span className="font-bold text-ink-headline">{res.vectors.naming}%</span>
                       </div>
                       <div>
-                        <span className="text-ink-dim block text-[10px]">DOM DEPTH</span>
+                        <span className="text-ink-dim block text-[10px]">{t.latest.domDepth}</span>
                         <span className="font-bold text-ink-headline">{res.vectors.structure}%</span>
                       </div>
                     </div>
@@ -95,7 +98,7 @@ export default function LatestInvestigations({ onSelectInvestigation }: LatestIn
                   <div className="lg:col-span-4 flex flex-col justify-between items-start lg:items-end h-full">
                     <div className="lg:text-right">
                       <span className="font-mono text-xs uppercase text-ink-dim block tracking-wider">
-                        AI SIGNAL SCORE
+                        {t.latest.scoreTag}
                       </span>
                       <div className="font-editorial text-6xl sm:text-7xl font-black text-ink-headline group-hover:text-acid transition-colors">
                         {res.overallScore}
@@ -111,7 +114,7 @@ export default function LatestInvestigations({ onSelectInvestigation }: LatestIn
                     </div>
 
                     <div className="mt-6 lg:mt-0 font-mono text-xs text-ink-dim group-hover:text-ink-headline transition-colors flex items-center gap-1">
-                      <span>VIEW FULL AUTOPSY</span>
+                      <span>{t.latest.viewAutopsy}</span>
                       <span>→</span>
                     </div>
                   </div>

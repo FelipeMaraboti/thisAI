@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Terminal, Code, CheckCircle, AlertTriangle } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function CodeForensics() {
+  const { t } = useLanguage();
   const [selectedSnippet, setSelectedSnippet] = useState<'synthetic' | 'artisanal'>('synthetic');
 
   return (
@@ -14,14 +15,14 @@ export default function CodeForensics() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-8 mb-16 border-b border-border-hairline">
           <div>
             <span className="font-mono text-xs text-acid tracking-widest uppercase font-semibold">
-              [SYNTACTIC AUTOPSY]
+              {t.codeForensics.tag}
             </span>
             <h2 className="font-editorial text-4xl sm:text-5xl md:text-6xl font-black text-ink-headline tracking-tight mt-2">
-              CODE FORENSICS
+              {t.codeForensics.title}
             </h2>
           </div>
           <p className="font-mono text-xs text-ink-muted max-w-md">
-            Examining lexical naming predictability and AST nesting traits. Compare the stark difference between LLM-generated code and human engineering craft.
+            {t.codeForensics.subtitle}
           </p>
         </div>
 
@@ -51,7 +52,7 @@ export default function CodeForensics() {
                       : 'bg-bg-subtle text-ink-muted border-border-hairline hover:text-ink-headline'
                   }`}
                 >
-                  [SYNTHETIC PATTERN]
+                  {t.codeForensics.snippetSynthetic}
                 </button>
                 <button
                   onClick={() => setSelectedSnippet('artisanal')}
@@ -61,7 +62,7 @@ export default function CodeForensics() {
                       : 'bg-bg-subtle text-ink-muted border-border-hairline hover:text-ink-headline'
                   }`}
                 >
-                  [ARTISANAL CRAFT]
+                  {t.codeForensics.snippetArtisanal}
                 </button>
               </div>
             </div>
@@ -196,33 +197,39 @@ export default function CodeForensics() {
             
             <div className="p-6 bg-bg-surface border border-border-hairline space-y-4">
               <div className="text-[10px] text-acid uppercase font-bold tracking-widest">
-                [CADENCE ANALYSIS]
+                {t.codeForensics.cadenceAnalysis}
               </div>
               
               <div>
-                <span className="text-ink-dim text-[11px] block">NAMING CONSISTENCY</span>
+                <span className="text-ink-dim text-[11px] block">{t.codeForensics.namingConsistency}</span>
                 <div className="font-editorial text-4xl font-bold text-ink-headline">
                   {selectedSnippet === 'synthetic' ? '89 / 100' : '14 / 100'}
                 </div>
                 <div className="text-ink-muted text-[11px] mt-1">
                   {selectedSnippet === 'synthetic'
-                    ? 'Unnaturally rigid class prefix hierarchy (.hero-*)'
-                    : 'Idiosyncratic modular architecture with bespoke entropy'}
+                    ? t.codeForensics.syntheticDesc
+                    : t.codeForensics.artisanalDesc}
                 </div>
               </div>
 
               <div className="pt-4 border-t border-border-hairline space-y-2 text-[11px]">
                 <div className="flex items-center justify-between">
-                  <span className="text-ink-dim">AST Depth Variance:</span>
-                  <span className="text-acid font-bold">{selectedSnippet === 'synthetic' ? '0.04 (Uniform)' : '0.78 (Dynamic)'}</span>
+                  <span className="text-ink-dim">{t.codeForensics.astVarianceLabel}</span>
+                  <span className="text-acid font-bold">
+                    {selectedSnippet === 'synthetic' ? t.codeForensics.astVarianceValSynthetic : t.codeForensics.astVarianceValArtisanal}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-ink-dim">Copywriting Idiom Score:</span>
-                  <span className="text-acid font-bold">{selectedSnippet === 'synthetic' ? '92% Synthetic' : '5% Human'}</span>
+                  <span className="text-ink-dim">{t.codeForensics.copyScoreLabel}</span>
+                  <span className="text-acid font-bold">
+                    {selectedSnippet === 'synthetic' ? t.codeForensics.copyScoreValSynthetic : t.codeForensics.copyScoreValArtisanal}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-ink-dim">Likely Origin:</span>
-                  <span className="text-ink-headline font-bold">{selectedSnippet === 'synthetic' ? 'GPT-4o / v0 / Cursor' : 'Human Software Engineer'}</span>
+                  <span className="text-ink-dim">{t.codeForensics.originLabel}</span>
+                  <span className="text-ink-headline font-bold">
+                    {selectedSnippet === 'synthetic' ? t.codeForensics.originValSynthetic : t.codeForensics.originValArtisanal}
+                  </span>
                 </div>
               </div>
             </div>

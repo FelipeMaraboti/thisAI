@@ -2,7 +2,8 @@
 
 import React from 'react';
 import { InvestigationResult } from '@/lib/forensics/types';
-import { ShieldAlert, ArrowLeft, Share2, Download, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ShieldAlert, ArrowLeft } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 interface InvestigationReportProps {
   report: InvestigationResult;
@@ -10,6 +11,7 @@ interface InvestigationReportProps {
 }
 
 export default function InvestigationReport({ report, onClose }: InvestigationReportProps) {
+  const { t } = useLanguage();
   const isHighSignal = report.overallScore >= 70;
   const isModerate = report.overallScore >= 45 && report.overallScore < 70;
 
@@ -33,13 +35,13 @@ export default function InvestigationReport({ report, onClose }: InvestigationRe
             className="flex items-center gap-2 text-ink-body hover:text-acid transition-colors focus:outline-none"
           >
             <ArrowLeft className="w-4 h-4" />
-            <span>[RETURN TO HOMEPAGE]</span>
+            <span>{t.report.returnHome}</span>
           </button>
 
           <div className="flex items-center gap-4 text-[11px]">
-            <span>STATUS: SEALED_FORENSIC_DOSSIER</span>
+            <span>{t.report.sealedDossier}</span>
             <span className="text-ink-dim">/</span>
-            <span className="text-acid font-bold">ACCURACY: CALIBRATED</span>
+            <span className="text-acid font-bold">{t.report.calibratedAccuracy}</span>
           </div>
         </div>
 
@@ -66,7 +68,7 @@ export default function InvestigationReport({ report, onClose }: InvestigationRe
           <div className="lg:col-span-4 flex flex-col justify-between items-start lg:items-end font-mono">
             <div className="text-left lg:text-right">
               <span className="text-[11px] text-ink-dim uppercase tracking-widest block mb-1">
-                AI SIGNAL SCORE
+                {t.report.aiSignalScore}
               </span>
               
               <div className="font-editorial text-7xl sm:text-8xl md:text-9xl font-black text-acid leading-none">
@@ -96,10 +98,10 @@ export default function InvestigationReport({ report, onClose }: InvestigationRe
           <div className="lg:col-span-5 space-y-8">
             <div>
               <span className="font-mono text-xs text-acid tracking-widest uppercase font-bold block mb-2">
-                [VECTORS]
+                {t.report.vectorsTag}
               </span>
               <h2 className="font-editorial text-2xl font-bold text-ink-headline">
-                FORENSIC BREAKDOWN
+                {t.report.breakdownTitle}
               </h2>
             </div>
 
@@ -129,18 +131,18 @@ export default function InvestigationReport({ report, onClose }: InvestigationRe
             {/* Confidence Stamp */}
             <div className="p-6 bg-bg-surface border border-border-hairline space-y-2 font-mono text-xs">
               <div className="flex items-center justify-between">
-                <span className="text-ink-dim uppercase">CONFIDENCE RATING:</span>
+                <span className="text-ink-dim uppercase">{t.report.confidenceRating}</span>
                 <span className="text-acid font-bold">[{report.confidence}]</span>
               </div>
               <p className="text-ink-muted font-sans text-xs leading-relaxed">
-                The score is computed from observable public engineering signals. It is an algorithmic estimation of AI-assisted generation, not absolute legal proof of origin.
+                {t.report.confidenceExplanation}
               </p>
             </div>
 
             {/* Technology Stack List */}
             <div className="p-6 bg-bg-surface border border-border-hairline space-y-4 font-mono text-xs">
               <div className="text-[10px] text-acid uppercase font-bold tracking-wider">
-                [DETECTED TECHNOLOGIES]
+                {t.report.detectedTechTag}
               </div>
               
               <div className="flex flex-wrap gap-2">
@@ -161,10 +163,10 @@ export default function InvestigationReport({ report, onClose }: InvestigationRe
           <div className="lg:col-span-7 space-y-8">
             <div>
               <span className="font-mono text-xs text-acid tracking-widest uppercase font-bold block mb-2">
-                [EXPLAINABILITY]
+                {t.report.explainabilityTag}
               </span>
               <h2 className="font-editorial text-2xl font-bold text-ink-headline">
-                EVIDENCE EXPLORER
+                {t.report.evidenceExplorerTitle}
               </h2>
             </div>
 
@@ -191,7 +193,7 @@ export default function InvestigationReport({ report, onClose }: InvestigationRe
                     </div>
 
                     <span className="font-mono text-[10px] text-ink-dim">
-                      {ev.isPositive ? 'SYNTHETIC SIGNAL' : 'ARTISANAL SIGNAL'}
+                      {ev.isPositive ? t.report.syntheticSignal : t.report.artisanalSignal}
                     </span>
                   </div>
 
@@ -216,7 +218,7 @@ export default function InvestigationReport({ report, onClose }: InvestigationRe
             <div className="p-4 bg-bg-surface/60 border border-border-hairline text-xs font-mono text-ink-dim flex items-start gap-3">
               <ShieldAlert className="w-4 h-4 text-ink-muted shrink-0 mt-0.5" />
               <p className="font-sans leading-relaxed">
-                <strong className="text-ink-muted font-mono">Ethical Transparency:</strong> ThisAI? identifies architectural patterns associated with AI-assisted development. It cannot definitively determine whether AI was used to build a website.
+                <strong className="text-ink-muted font-mono">{t.report.ethicalDisclaimerTitle}</strong> {t.report.ethicalDisclaimerText}
               </p>
             </div>
 

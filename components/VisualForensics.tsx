@@ -1,54 +1,19 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Layers, Scan, Crosshair, Box } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function VisualForensics() {
+  const { t } = useLanguage();
   const [activeLayer, setActiveLayer] = useState<'all' | 'boxes' | 'mesh'>('all');
   const [hoveredBox, setHoveredBox] = useState<string | null>(null);
 
-  const MARKERS = [
-    {
-      id: 'box-nav',
-      tag: '01 / NAV',
-      label: 'CANONICAL_PILL_NAV',
-      x: 10,
-      y: 6,
-      w: 80,
-      h: 8,
-      finding: 'Standard centered pill navigation with logo-left, 4 links, and right CTA button (94% prompt conformity).',
-    },
-    {
-      id: 'box-hero',
-      tag: '02 / HERO',
-      label: 'GRADIENT_HEADLINE_CONTAINER',
-      x: 12,
-      y: 18,
-      w: 76,
-      h: 26,
-      finding: 'Over-sized gradient typography (h1) paired with glowing radial spotlight background and centered input.',
-    },
-    {
-      id: 'box-cta',
-      tag: '03 / CTA',
-      label: 'ACCENT_PILL_ACTION',
-      x: 35,
-      y: 47,
-      w: 30,
-      h: 7,
-      finding: 'High-contrast glowing pill action button with standard Lucide arrow icon.',
-    },
-    {
-      id: 'box-grid',
-      tag: '04 / GRID',
-      label: '3_COLUMN_BENTO_MATRIX',
-      x: 8,
-      y: 58,
-      w: 84,
-      h: 34,
-      finding: 'Symmetrical 3-card bento box with 24px padding and rounded-2xl corners matching v0 template archetype.',
-    },
-  ];
+  const MARKER_COORDS: Record<string, { x: number; y: number; w: number; h: number }> = {
+    'box-nav': { x: 10, y: 6, w: 80, h: 8 },
+    'box-hero': { x: 12, y: 18, w: 76, h: 26 },
+    'box-cta': { x: 35, y: 47, w: 30, h: 7 },
+    'box-grid': { x: 8, y: 58, w: 84, h: 34 },
+  };
 
   return (
     <section className="py-28 border-b border-border-hairline bg-bg-surface">
@@ -58,14 +23,14 @@ export default function VisualForensics() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-8 mb-16 border-b border-border-hairline">
           <div>
             <span className="font-mono text-xs text-acid tracking-widest uppercase font-semibold">
-              [DECONSTRUCTION]
+              {t.visualForensics.tag}
             </span>
             <h2 className="font-editorial text-4xl sm:text-5xl md:text-6xl font-black text-ink-headline tracking-tight mt-2">
-              VISUAL FORENSICS
+              {t.visualForensics.title}
             </h2>
           </div>
           <p className="font-mono text-xs text-ink-muted max-w-md">
-            Interactive topological overlay engine. We visually dismantle website layouts into geometric bounding boxes, detecting generative symmetry and template archetypes.
+            {t.visualForensics.subtitle}
           </p>
         </div>
 
@@ -79,7 +44,7 @@ export default function VisualForensics() {
             <div className="flex items-center justify-between pb-4 mb-4 border-b border-border-hairline font-mono text-[11px] text-ink-muted">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 bg-acid rounded-full" />
-                <span className="text-ink-headline font-bold">TOPOLOGICAL_DISSECTOR_v2</span>
+                <span className="text-ink-headline font-bold">{t.visualForensics.dissectorTag}</span>
                 <span className="text-ink-dim">// TARGET: synthetic-saas-mockup.design</span>
               </div>
               <div className="flex items-center gap-2">
@@ -140,8 +105,9 @@ export default function VisualForensics() {
 
               {/* Forensic Bounding Box Overlays */}
               {(activeLayer === 'all' || activeLayer === 'boxes') &&
-                MARKERS.map((box) => {
+                t.visualForensics.markers.map((box) => {
                   const isHovered = hoveredBox === box.id;
+                  const coords = MARKER_COORDS[box.id] || { x: 10, y: 10, w: 50, h: 20 };
 
                   return (
                     <div
@@ -155,10 +121,10 @@ export default function VisualForensics() {
                           : 'border-acid/60 bg-acid/5 hover:border-acid z-20'
                       }`}
                       style={{
-                        left: `${box.x}%`,
-                        top: `${box.y}%`,
-                        width: `${box.w}%`,
-                        height: `${box.h}%`,
+                        left: `${coords.x}%`,
+                        top: `${coords.y}%`,
+                        width: `${coords.w}%`,
+                        height: `${coords.h}%`,
                       }}
                     >
                       {/* Technical Tag Pin */}
@@ -182,7 +148,7 @@ export default function VisualForensics() {
 
             {/* Layer Control Bar */}
             <div className="flex items-center justify-between pt-4 mt-4 border-t border-border-hairline font-mono text-xs text-ink-muted">
-              <span className="text-ink-dim">LAYER MODES:</span>
+              <span className="text-ink-dim">{t.visualForensics.layerModes}</span>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveLayer('all')}
@@ -192,7 +158,7 @@ export default function VisualForensics() {
                       : 'bg-bg-subtle text-ink-muted border-border-hairline hover:text-ink-headline'
                   }`}
                 >
-                  [COMPOSITE]
+                  {t.visualForensics.modeComposite}
                 </button>
                 <button
                   onClick={() => setActiveLayer('boxes')}
@@ -202,7 +168,7 @@ export default function VisualForensics() {
                       : 'bg-bg-subtle text-ink-muted border-border-hairline hover:text-ink-headline'
                   }`}
                 >
-                  [BOUNDING BOXES]
+                  {t.visualForensics.modeBoundingBoxes}
                 </button>
                 <button
                   onClick={() => setActiveLayer('mesh')}
@@ -212,7 +178,7 @@ export default function VisualForensics() {
                       : 'bg-bg-subtle text-ink-muted border-border-hairline hover:text-ink-headline'
                   }`}
                 >
-                  [TOPOLOGY MESH]
+                  {t.visualForensics.modeTopologyMesh}
                 </button>
               </div>
             </div>
@@ -223,19 +189,19 @@ export default function VisualForensics() {
           <div className="lg:col-span-4 space-y-4 font-mono text-xs">
             <div className="p-4 bg-bg-subtle border border-border-hairline">
               <div className="text-[10px] text-acid font-bold uppercase tracking-widest mb-1">
-                [TOPOLOGICAL SCAN SUMMARY]
+                {t.visualForensics.summaryTag}
               </div>
               <div className="font-editorial text-2xl font-bold text-ink-headline mb-2">
-                Geometric Symmetry: 91/100
+                {t.visualForensics.summaryTitle}
               </div>
               <p className="font-body text-xs text-ink-body font-light leading-relaxed">
-                Hover over the highlighted bounding boxes on the left to inspect structural patterns and spatial invariants.
+                {t.visualForensics.summaryDesc}
               </p>
             </div>
 
             {/* List of Detected Overlays */}
             <div className="space-y-2">
-              {MARKERS.map((m) => {
+              {t.visualForensics.markers.map((m) => {
                 const isSelected = hoveredBox === m.id;
 
                 return (

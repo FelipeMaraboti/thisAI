@@ -2,9 +2,11 @@
 
 import React, { useState } from 'react';
 import { LAB_ARTICLES } from '@/lib/forensics/presets';
-import { ArrowUpRight, BookOpen, X, Clock, User } from 'lucide-react';
+import { ArrowUpRight, Clock, User, X } from 'lucide-react';
+import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function TheLab() {
+  const { t } = useLanguage();
   const [selectedArticle, setSelectedArticle] = useState<typeof LAB_ARTICLES[0] | null>(null);
 
   return (
@@ -15,20 +17,20 @@ export default function TheLab() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-8 mb-16 border-b border-border-hairline">
           <div>
             <span className="font-mono text-xs text-acid tracking-widest uppercase font-semibold">
-              [DISPATCHES & ESSAYS]
+              {t.lab.tag}
             </span>
             <h2 className="font-editorial text-4xl sm:text-5xl md:text-6xl font-black text-ink-headline tracking-tight mt-2">
-              FROM THE LAB
+              {t.lab.title}
             </h2>
           </div>
           <p className="font-mono text-xs text-ink-muted max-w-sm">
-            Investigative journalism and technical essays probing the evolving aesthetics, linguistics, and code genetics of the machine-assisted web.
+            {t.lab.subtitle}
           </p>
         </div>
 
         {/* Magazine Grid Articles */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          {LAB_ARTICLES.map((art, idx) => (
+          {LAB_ARTICLES.map((art) => (
             <article
               key={art.id}
               onClick={() => setSelectedArticle(art)}
@@ -107,12 +109,12 @@ export default function TheLab() {
               </div>
 
               <div className="pt-8 mt-8 border-t border-border-hairline flex items-center justify-between font-mono text-xs text-ink-muted">
-                <span>THISAI? FORENSIC LABORATORY</span>
+                <span>{t.lab.labDispatchTag}</span>
                 <button
                   onClick={() => setSelectedArticle(null)}
                   className="px-4 py-2 bg-bg-subtle hover:bg-acid hover:text-bg-primary text-ink-headline font-bold transition-colors"
                 >
-                  CLOSE ESSAY
+                  {t.lab.closeEssay}
                 </button>
               </div>
             </div>
