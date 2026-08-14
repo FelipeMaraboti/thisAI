@@ -1,5 +1,6 @@
 import { InvestigationResult, EvidenceItem, TechStackItem, SignalVerdict, ConfidenceLevel } from './types';
 import { FEATURED_INVESTIGATIONS } from './presets';
+import { validateTargetUrl } from '../security/ssrf';
 
 // Deterministic seed helper based on domain
 function hashString(str: string): number {
@@ -11,6 +12,8 @@ function hashString(str: string): number {
   }
   return Math.abs(hash);
 }
+
+const MAX_HTML_SIZE_BYTES = 2 * 1024 * 1024; // 2 MB maximum payload limit to prevent memory bombs
 
 export async function analyzeWebsiteForensics(cleanUrl: string, domain: string): Promise<InvestigationResult> {
   const normalizedDomain = domain.toLowerCase().replace(/^www\./, '');
@@ -24,7 +27,7 @@ export async function analyzeWebsiteForensics(cleanUrl: string, domain: string):
     return matchedPreset.result;
   }
 
-  // 2. Perform live fetch or heuristic analysis
+  // 2. Perform live fetch with security protections (SSRF redirect validation, size capping, timeouts)
   let htmlContent = '';
   let responseTimeMs = 280;
 
@@ -33,8 +36,11 @@ export async function analyzeWebsiteForensics(cleanUrl: string, domain: string):
     const timeoutId = setTimeout(() => controller.abort(), 4500);
     const start = Date.now();
 
-    const res = await fetch(cleanUrl.startsWith('http') ? cleanUrl : `https://${cleanUrl}`, {
+    const targetUrl = cleanUrl.startsWith('http') ? cleanUrl : `https://${cleanUrl}`;
+
+    const res = await fetch(targetUrl, {
       signal: controller.signal,
+      redirect: 'manual', // Prevent SSRF through unvalidated open redirects
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 ThisAI-Forensic-Crawler/2.4',
         'Accept': 'text/html,application/xhtml+xml',
@@ -44,11 +50,40 @@ export async function analyzeWebsiteForensics(cleanUrl: string, domain: string):
     clearTimeout(timeoutId);
     responseTimeMs = Date.now() - start;
 
-    if (res.ok) {
-      htmlContent = await res.text();
+    if (res.status >= 300 && res.status < 400) {
+      // Safe redirect validation: check location header against SSRF before following
+      const redirectLocation = res.headers.get('location');
+      if (redirectLocation) {
+        const resolvedRedirect = new URL(redirectLocation, targetUrl).toString();
+        const redirectCheck = await validateTargetUrl(resolvedRedirect);
+        
+        if (redirectCheck.isValid) {
+          const redirectController = new AbortController();
+          const redirectTimeout = setTimeout(() => redirectController.abort(), 3500);
+          
+          const redirectRes = await fetch(redirectCheck.cleanUrl, {
+            signal: redirectController.signal,
+            redirect: 'manual',
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/128.0.0.0 Safari/537.36 ThisAI-Forensic-Crawler/2.4',
+              'Accept': 'text/html,application/xhtml+xml',
+            },
+          });
+          clearTimeout(redirectTimeout);
+
+          if (redirectRes.ok) {
+            const rawText = await redirectRes.text();
+            htmlContent = rawText.slice(0, MAX_HTML_SIZE_BYTES);
+          }
+        }
+      }
+    } else if (res.ok) {
+      const rawText = await res.text();
+      // Cap at 2 MB to prevent memory exhaustion attacks
+      htmlContent = rawText.slice(0, MAX_HTML_SIZE_BYTES);
     }
   } catch {
-    // Network or timeout fallback to structural domain heuristics
+    // Network or timeout fallback to structural heuristics
   }
 
   const seed = hashString(normalizedDomain);
