@@ -46,7 +46,6 @@ export interface Translations {
     tag: string;
     titleLine1: string;
     titleLine2: string;
-    titleLine3Prefix: string;
     titleLine3Highlight: string;
     description: string;
     versionTag: string;
@@ -252,7 +251,6 @@ export const DICTIONARY: Record<Language, Translations> = {
       tag: '[O MÉTODO]',
       titleLine1: 'NÃO ADIVINHAMOS.',
       titleLine2: 'NÓS',
-      titleLine3Prefix: 'NÓS',
       titleLine3Highlight: 'INVESTIGAMOS.',
       description: 'Não dependemos de redes neurais opacas de caixa-preta. Analisamos anomalias estruturais, lexicais e topológicas objetivas em 6 vetores de engenharia calibrados.',
       versionTag: 'METODOLOGIA v2.4 // 6 VETORES FORENSES',
@@ -594,7 +592,6 @@ export const DICTIONARY: Record<Language, Translations> = {
       tag: '[THE METHOD]',
       titleLine1: "WE DON'T",
       titleLine2: 'GUESS.',
-      titleLine3Prefix: 'WE',
       titleLine3Highlight: 'INVESTIGATE.',
       description: 'We do not rely on opaque black-box neural networks. Instead, we analyze measurable structural, lexical, and topological anomalies across 6 objective engineering vectors.',
       versionTag: 'METHODOLOGY v2.4 // 6 FORENSIC VECTORS',

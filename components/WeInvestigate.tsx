@@ -56,7 +56,7 @@ export default function WeInvestigate() {
               <span className="investigate-title-line block">{t.weInvestigate.titleLine1}</span>
               <span className="investigate-title-line block text-ink-muted">{t.weInvestigate.titleLine2}</span>
               <span className="investigate-title-line block text-ink-headline">
-                {t.weInvestigate.titleLine3Prefix} <span className="text-acid underline decoration-acid/30 underline-offset-8">{t.weInvestigate.titleLine3Highlight}</span>
+                <span className="text-acid underline decoration-acid/30 underline-offset-8">{t.weInvestigate.titleLine3Highlight}</span>
               </span>
             </h2>
           </div>
