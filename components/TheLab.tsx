@@ -1,13 +1,12 @@
 'use client';
 
 import React, { useState } from 'react';
-import { LAB_ARTICLES } from '@/lib/forensics/presets';
 import { ArrowUpRight, Clock, User, X } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function TheLab() {
   const { t } = useLanguage();
-  const [selectedArticle, setSelectedArticle] = useState<typeof LAB_ARTICLES[0] | null>(null);
+  const [selectedArticle, setSelectedArticle] = useState<(typeof t.lab.articles)[0] | null>(null);
 
   return (
     <section id="lab" className="py-28 border-b border-border-hairline bg-bg-surface">

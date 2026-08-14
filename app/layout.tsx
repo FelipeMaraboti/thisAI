@@ -13,6 +13,11 @@ export const metadata: Metadata = {
     description: 'Investigating the public surface of websites for AI-assisted development patterns.',
     type: 'website',
   },
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
 };
 
 export default function RootLayout({
