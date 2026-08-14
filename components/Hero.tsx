@@ -184,22 +184,12 @@ export default function Hero({ onInvestigate, isLoading }: HeroProps) {
                 {t.hero.vectorsEvaluated}
               </div>
               <div className="grid grid-cols-2 gap-2 text-[11px]">
-                <div className="p-2 bg-bg-subtle border border-border-hairline flex items-center justify-between">
-                  <span>01. CODE AST</span>
-                  <span className="text-acid">■</span>
-                </div>
-                <div className="p-2 bg-bg-subtle border border-border-hairline flex items-center justify-between">
-                  <span>02. NAMING</span>
-                  <span className="text-acid">■</span>
-                </div>
-                <div className="p-2 bg-bg-subtle border border-border-hairline flex items-center justify-between">
-                  <span>03. TOPOLOGY</span>
-                  <span className="text-acid">■</span>
-                </div>
-                <div className="p-2 bg-bg-subtle border border-border-hairline flex items-center justify-between">
-                  <span>04. COPYWRITING</span>
-                  <span className="text-acid">■</span>
-                </div>
+                {t.hero.vectorList.map((vec, idx) => (
+                  <div key={idx} className="p-2 bg-bg-subtle border border-border-hairline flex items-center justify-between">
+                    <span>{vec}</span>
+                    <span className="text-acid">■</span>
+                  </div>
+                ))}
               </div>
             </div>
 

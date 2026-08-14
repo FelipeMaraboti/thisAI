@@ -42,7 +42,8 @@ export default function LatestInvestigations({
 
   useEffect(() => {
     fetchDynamicInvestigations();
-    const interval = setInterval(fetchDynamicInvestigations, 3500);
+    // Re-check investigations every 5 minutes (300,000 ms)
+    const interval = setInterval(fetchDynamicInvestigations, 300000);
     return () => clearInterval(interval);
   }, []);
 

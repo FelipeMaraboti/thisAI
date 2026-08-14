@@ -11,16 +11,22 @@ interface InvestigationReportProps {
 }
 
 export default function InvestigationReport({ report, onClose }: InvestigationReportProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const isHighSignal = report.overallScore >= 70;
   const isModerate = report.overallScore >= 45 && report.overallScore < 70;
 
+  const verdictLabel = isHighSignal
+    ? t.report.verdicts.high
+    : isModerate
+    ? t.report.verdicts.moderate
+    : t.report.verdicts.low;
+
   const vectorList = [
-    { label: 'CODE FORENSICS', val: report.vectors.code, desc: 'AST cyclomatic depth & indentation regularity' },
-    { label: 'NAMING CADENCE', val: report.vectors.naming, desc: 'BEM predictability & Tailwind utility token chains' },
-    { label: 'STRUCTURE & AST', val: report.vectors.structure, desc: 'DOM tree invariants & wrapper encapsulation ratios' },
-    { label: 'VISUAL TOPOLOGY', val: report.vectors.visual, desc: 'Bento box symmetry & standard 3-tier card spacing' },
-    { label: 'SYNTHETIC COPYWRITING', val: report.vectors.content, desc: 'LLM marketing idiom clustering & syntactic tropes' },
+    { label: t.report.vectors[0].label, val: report.vectors.code, desc: t.report.vectors[0].desc },
+    { label: t.report.vectors[1].label, val: report.vectors.naming, desc: t.report.vectors[1].desc },
+    { label: t.report.vectors[2].label, val: report.vectors.structure, desc: t.report.vectors[2].desc },
+    { label: t.report.vectors[3].label, val: report.vectors.visual, desc: t.report.vectors[3].desc },
+    { label: t.report.vectors[4].label, val: report.vectors.content, desc: t.report.vectors[4].desc },
   ];
 
   return (
@@ -83,7 +89,7 @@ export default function InvestigationReport({ report, onClose }: InvestigationRe
                     ? 'bg-white/10 text-ink-headline border border-border-subtle'
                     : 'bg-white/5 text-ink-muted border border-border-hairline'
                 }`}>
-                  {report.verdict}
+                  {verdictLabel}
                 </span>
               </div>
             </div>

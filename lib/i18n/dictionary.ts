@@ -23,6 +23,7 @@ export interface Translations {
     missionTag: string;
     missionText: string;
     vectorsEvaluated: string;
+    vectorList: string[];
     ethicalScanner: string;
   };
   liveFeed: {
@@ -32,6 +33,7 @@ export interface Translations {
   };
   latest: {
     tag: string;
+    liveTag: string;
     title: string;
     subtitle: string;
     viewAutopsy: string;
@@ -120,6 +122,17 @@ export interface Translations {
     readEssay: string;
     closeEssay: string;
     labDispatchTag: string;
+    articles: Array<{
+      id: string;
+      issue: string;
+      date: string;
+      readTime: string;
+      title: string;
+      excerpt: string;
+      author: string;
+      category: string;
+      content: string[];
+    }>;
   };
   scanner: {
     tag: string;
@@ -151,6 +164,16 @@ export interface Translations {
     artisanalSignal: string;
     ethicalDisclaimerTitle: string;
     ethicalDisclaimerText: string;
+    verdicts: {
+      high: string;
+      moderate: string;
+      low: string;
+    };
+    vectors: Array<{
+      key: string;
+      label: string;
+      desc: string;
+    }>;
   };
   methodologyModal: {
     sopTag: string;
@@ -171,6 +194,14 @@ export interface Translations {
     legalText: string;
     copyright: string;
     privacy: string;
+  };
+  cursor: {
+    examine: string;
+    investigate: string;
+    read: string;
+    inspect: string;
+    select: string;
+    close: string;
   };
 }
 
@@ -198,15 +229,17 @@ export const DICTIONARY: Record<Language, Translations> = {
       missionTag: '[MISSÃO_FORENSE]',
       missionText: 'Não adivinhamos. Inspecionamos árvores de código público, invariantes topológicos, profundidade de AST e clichês de copywriting sintético.',
       vectorsEvaluated: '[VETORES AVALIADOS]',
+      vectorList: ['01. AST DE CÓDIGO', '02. NOMENCLATURA', '03. TOPOLOGIA', '04. REDAÇÃO'],
       ethicalScanner: 'Scanner Ético: Inspecionamos estritamente superfícies públicas com zero ações invasivas.',
     },
     liveFeed: {
       tag: 'FEED AO VIVO',
-      subTag: '/ BUFFER FIFO DE 4 SLOTS',
+      subTag: '/ BUFFER FIFO DE 4 SLOTS (ATUALIZA A CADA 5 MIN)',
       aiScore: 'IA',
     },
     latest: {
       tag: '[ARQUIVO DE DOSSIÊS]',
+      liveTag: 'FEED DINÂMICO AO VIVO (5 MIN)',
       title: 'ÚLTIMAS INVESTIGAÇÕES',
       subtitle: 'Autópsias periciais recentes conduzidas em superfícies públicas. Analisadas quanto a padrões de AST generativos, cadência lexical e invariantes de layout.',
       viewAutopsy: 'VER LAUDO COMPLETO',
@@ -380,6 +413,66 @@ export const DICTIONARY: Record<Language, Translations> = {
       readEssay: 'LER ARTIGO',
       closeEssay: 'FECHAR ARTIGO',
       labDispatchTag: 'LABORATÓRIO DE PERÍCIA FORENSE THISAI?',
+      articles: [
+        {
+          id: 'art-01',
+          issue: 'EDIÇÃO 04 // ENSAIO',
+          date: '14 AGO 2026',
+          readTime: '6 MIN DE LEITURA',
+          title: 'Por Que Sites Gerados por IA Parecem Tão Estranhamente Semelhantes',
+          excerpt: 'Uma autópsia investigativa no espaço latente de templates de LLMs. Como prompts criaram a monocultura de bento grids escuros, cartuchos rounded-2xl e o mesmo vocabulário de marketing.',
+          author: 'Despacho do Laboratório Forense',
+          category: 'Topologia Visual',
+          content: [
+            'Nos últimos 24 meses, a web pública experimentou uma convergência sem precedentes na topologia estética. Onde o design humano historicamente se caracterizou pelo atrito, hacks de CSS e peculiaridades de navegadores, a geração assistida por IA introduziu uma uniformidade matemática estéril.',
+            'Quando um LLM recebe a instrução de criar uma landing page moderna, ele recorre a milhões de tokens de treinamento fortemente focados na documentação do Tailwind, repositórios populares e componentes padronizados. O resultado é o mesmo padrão: 3 colunas, padding vertical de 64px, radial glow em #6366f1 e badges em formato de pílula.',
+            'Nosso crawler analisou 14.000 domínios registrados recentemente. Mais de 71% dos sites com score acima de 75 compartilhavam profundidades de nós idênticas (6.2 ± 0.3) e prefixos lexicais perfeitamente simétricos.'
+          ]
+        },
+        {
+          id: 'art-02',
+          issue: 'EDIÇÃO 03 // AUDITORIA TÉCNICA',
+          date: '02 AGO 2026',
+          readTime: '8 MIN DE LEITURA',
+          title: 'É Possível Detectar Código Escrito por IA em Produção?',
+          excerpt: 'Dissecando assinaturas de AST, frequência de comentários e entropia de tokens em bundles minificados para rastrear origens generativas.',
+          author: 'Dr. V. Aris (Perito Chefe de Forense)',
+          category: 'Genética de Código',
+          content: [
+            'Um equívoco comum é achar que a minificação apaga todas as pistas de autoria por IA. Embora nomes de variáveis sejam ofuscados, a topologia estrutural, a complexidade ciclomática e as árvores de dependências permanecem intactas.',
+            'Assistentes de IA possuem vícios claros: super-encapsulam componentes simples em tags <div> redundantes, abusam de encadeamento opcional (?.) e geram assinaturas de funções rigidamente didáticas.',
+            'Comparando a entropia da AST do JavaScript de produção com repositórios humanos calibrados, calculamos um índice de alta probabilidade sem precisar de acesso ao código fonte privado.'
+          ]
+        },
+        {
+          id: 'art-03',
+          issue: 'EDIÇÃO 02 // FORENSE LEXICAL',
+          date: '18 JUL 2026',
+          readTime: '5 MIN DE LEITURA',
+          title: 'A Anatomia de uma Landing Page de LLM: 12 Clichês Recorrentes',
+          excerpt: 'De "Revolucione sua produtividade" a métricas flutuantes em badges: um catálogo forense dos clichês lexicais gerados por modelos de ponta.',
+          author: 'Despacho do Laboratório Forense',
+          category: 'Análise Linguística',
+          content: [
+            'Modelos de linguagem possuem um tom característico ao gerar textos publicitários. Palavras como "Seamless", "Supercharge", "Effortless", "Next-Gen" e "Revolutionize" aparecem com frequência 8.4x maior em sites de IA em relação a páginas humanas.',
+            'Além disso, a sintaxe segue uma fórmula matemática: Verbo de Ação + Adjetivo + Substantivo + "desenhado para" + Complemento. Uma vez identificada a cadência, torna-se impossível não notar.'
+          ]
+        },
+        {
+          id: 'art-04',
+          issue: 'EDIÇÃO 01 // CRÍTICA',
+          date: '05 JUL 2026',
+          readTime: '7 MIN DE LEITURA',
+          title: 'CSS Sintético: Como a Engenharia de Prompts Molda a Web Moderna',
+          excerpt: 'Quando desenvolvedores deixam de escrever CSS manualmente, o navegador se torna um motor de renderização para probabilidades estatísticas.',
+          author: 'Marcus Vance',
+          category: 'Estética & Cultura',
+          content: [
+            'O CSS feito à mão é repleto de acasos felizes, micro-assimetrias e identidade cultural. O CSS sintético, por outro lado, é um problema de otimização de backpropagation, priorizando utilitários seguros em detrimento de layouts experimentais.',
+            'O ThisAI? não nasceu para condenar ferramentas automatizadas, mas para mapear a mudança no artesanato digital e preservar o discernimento crítico na era da síntese automatizada.'
+          ]
+        }
+      ]
     },
     scanner: {
       tag: '[SCANNER_FORENSE_EM_TEMPO_REAL]',
@@ -413,6 +506,18 @@ export const DICTIONARY: Record<Language, Translations> = {
       artisanalSignal: 'SINAL ARTESANAL (HUMANO)',
       ethicalDisclaimerTitle: 'Transparência Ética:',
       ethicalDisclaimerText: 'ThisAI? identifica padrões arquiteturais associados ao desenvolvimento assistido por Inteligência Artificial. Não é possível determinar de forma binária ou absoluta se um humano utilizou IA na construção.',
+      verdicts: {
+        high: 'ALTOS SINAIS DE IA DETECTADOS',
+        moderate: 'PROVAVELMENTE ASSISTIDO POR IA',
+        low: 'BAIXOS SINAIS DE IA (HUMANO)',
+      },
+      vectors: [
+        { key: 'code', label: 'CÓDIGO FORENSE', desc: 'Profundidade ciclomática da AST e regularidade de indentação' },
+        { key: 'naming', label: 'CADÊNCIA DE NOMENCLATURA', desc: 'Previsibilidade BEM e tokens de classes Tailwind' },
+        { key: 'structure', label: 'ESTRUTURA & AST', desc: 'Invariantes da árvore DOM e proporções de encapsulamento' },
+        { key: 'visual', label: 'TOPOLOGIA VISUAL', desc: 'Simetria bento box e ritmo de espaçamento de cartuchos' },
+        { key: 'content', label: 'COPYWRITING SINTÉTICO', desc: 'Densidade de clichês e expressões formulaicas de IA' },
+      ],
     },
     methodologyModal: {
       sopTag: '[PROCEDIMENTO OPERACIONAL PADRÃO]',
@@ -433,6 +538,14 @@ export const DICTIONARY: Record<Language, Translations> = {
       legalText: 'ThisAI? é um observatório forense independente. Todas as análises são baseadas em HTML público, CSS e topologia do DOM.',
       copyright: '© 2026 LABORATÓRIO FORENSE THISAI?. TODOS OS DIREITOS RESERVADOS.',
       privacy: 'Privacidade & Ética de Dados',
+    },
+    cursor: {
+      examine: 'EXAMINAR',
+      investigate: 'INVESTIGAR',
+      read: 'LER',
+      inspect: 'INSPECIONAR',
+      select: 'SELECIONAR',
+      close: 'FECHAR',
     },
   },
   en: {
@@ -457,16 +570,18 @@ export const DICTIONARY: Record<Language, Translations> = {
       sampleDossiers: 'SAMPLE DOSSIERS:',
       missionTag: '[FORENSIC_MISSION]',
       missionText: 'We don’t guess. We inspect public source trees, topological invariants, AST depths, and synthetic copywriting tropes.',
-      vectorsEvaluated: '[VETORS EVALUATED]',
+      vectorsEvaluated: '[VECTORS EVALUATED]',
+      vectorList: ['01. CODE AST', '02. NAMING', '03. TOPOLOGY', '04. COPYWRITING'],
       ethicalScanner: 'Ethical Scanner: We inspect only publicly accessible surfaces with zero intrusive actions.',
     },
     liveFeed: {
       tag: 'LIVE FEED',
-      subTag: '/ 4-SLOT FIFO BUFFER',
+      subTag: '/ 4-SLOT FIFO BUFFER (POLLS EVERY 5 MIN)',
       aiScore: 'AI',
     },
     latest: {
       tag: '[DOSSIER ARCHIVE]',
+      liveTag: 'LIVE DYNAMIC FEED (5 MIN)',
       title: 'LATEST INVESTIGATIONS',
       subtitle: 'Recent forensic autopsies conducted on public web surfaces. Scanned for generative AST patterns, lexical cadence and layout invariants.',
       viewAutopsy: 'VIEW FULL AUTOPSY',
@@ -640,6 +755,66 @@ export const DICTIONARY: Record<Language, Translations> = {
       readEssay: 'READ ESSAY',
       closeEssay: 'CLOSE ESSAY',
       labDispatchTag: 'THISAI? FORENSIC LABORATORY',
+      articles: [
+        {
+          id: 'art-01',
+          issue: 'ISSUE 04 // ESSAY',
+          date: '14 AUG 2026',
+          readTime: '6 MIN READ',
+          title: 'Why AI-Generated Websites Look So Eerily Similar',
+          excerpt: 'An investigative autopsy into the latent space of LLM web scaffolds. How prompt conditioning created the modern monoculture of dark bento grids, rounded-2xl cards, and identical marketing vocabulary.',
+          author: 'Forensics Lab Dispatch',
+          category: 'Visual Topology',
+          content: [
+            'Over the past 24 months, the public web has experienced an unprecedented convergence in aesthetic topology. Where human web design was historically characterized by friction, idiosyncratic CSS hacks, and browser-specific quirks, AI-assisted frontend generation has introduced a sterile, mathematically balanced uniformity.',
+            'When an LLM is asked to create a modern SaaS landing page, it pulls from millions of training tokens heavily weighted towards Tailwind documentation examples, popular GitHub boilerplates, and standardized component registries. The result is a repeating pattern: 3-column feature grids, 64px padding-y, radial glow backgrounds in #6366f1 or #10b981, and pill-shaped badges.',
+            'Our crawler analyzed 14,000 newly registered domains in Q2 2026. Over 71% of websites displaying AI signal scores above 75 shared identical DOM node tree depths (average depth 6.2 ± 0.3) and identical lexical class prefixes.'
+          ]
+        },
+        {
+          id: 'art-02',
+          issue: 'ISSUE 03 // TECHNICAL AUDIT',
+          date: '02 AUG 2026',
+          readTime: '8 MIN READ',
+          title: 'Can You Actually Detect AI-Written Code in Production?',
+          excerpt: 'Dissecting AST signatures, comment frequencies, and token entropy in minified production bundles to trace generative origins.',
+          author: 'Dr. V. Aris (Senior Forensics Analyst)',
+          category: 'Code Genetics',
+          content: [
+            'A common misconception is that minification and bundlers erase all evidence of AI authorship. While variable names are mangled, structural topology, cyclomatic complexity patterns, and library dependency graphs remain strikingly intact.',
+            'AI coding assistants have measurable habits: they over-encapsulate simple UI components into redundant wrapper <div> tags, generate hyper-defensive optional chaining operators (?.), and produce perfectly uniform function argument schemas.',
+            'By comparing the AST entropy of production JavaScript with calibrated baselines of human git repositories, we can calculate a high-confidence generative probability score without needing access to private server repositories.'
+          ]
+        },
+        {
+          id: 'art-03',
+          issue: 'ISSUE 02 // LEXICAL FORENSICS',
+          date: '18 JUL 2026',
+          readTime: '5 MIN READ',
+          title: 'The Anatomy of an LLM Landing Page: 12 Recurring Tropes',
+          excerpt: 'From "Unlock the power of" to floating badge metrics—a forensic catalog of the lexical and structural tropes generated by frontier models.',
+          author: 'Forensics Lab Dispatch',
+          category: 'Linguistic Analysis',
+          content: [
+            'Language models have a distinct tonal signature when generating marketing copy. Words like "Seamless", "Supercharge", "Effortless", "Next-Gen", and "Revolutionize" appear with 8.4x higher statistical frequency in AI-generated sites compared to human-authored corporate pages.',
+            'Furthermore, the sentence structure follows a strict formula: Verb + Adjective + Noun + "designed to" + Verb Phrase. Once you learn to spot the cadence, it becomes impossible to unsee.'
+          ]
+        },
+        {
+          id: 'art-04',
+          issue: 'ISSUE 01 // CRITIQUE',
+          date: '05 JUL 2026',
+          readTime: '7 MIN READ',
+          title: 'Synthetic CSS: How Prompt Engineering Shapes the Modern Web',
+          excerpt: 'When developers stop writing stylesheets by hand, the browser becomes a rendering engine for statistical probabilities.',
+          author: 'Marcus Vance',
+          category: 'Aesthetics & Culture',
+          content: [
+            'Handcrafted CSS is full of happy accidents, micro-asymmetries, and cultural references. Synthetic CSS, in contrast, is an optimization problem solved by backpropagation. It favors safe utility combinations over experimental layout geometry.',
+            'ThisAI? was founded not to condemn automated tools, but to map the changing topography of digital craft and preserve critical literacy in an era of automated synthesis.'
+          ]
+        }
+      ]
     },
     scanner: {
       tag: '[REALTIME_FORENSIC_SCANNER]',
@@ -673,6 +848,18 @@ export const DICTIONARY: Record<Language, Translations> = {
       artisanalSignal: 'ARTISANAL SIGNAL',
       ethicalDisclaimerTitle: 'Ethical Transparency:',
       ethicalDisclaimerText: 'ThisAI? identifies architectural patterns associated with AI-assisted development. It cannot definitively determine whether AI was used to build a website.',
+      verdicts: {
+        high: 'HIGH AI SIGNALS DETECTED',
+        moderate: 'LIKELY AI-ASSISTED',
+        low: 'LOW AI SIGNALS',
+      },
+      vectors: [
+        { key: 'code', label: 'CODE FORENSICS', desc: 'AST cyclomatic depth & indentation regularity' },
+        { key: 'naming', label: 'NAMING CADENCE', desc: 'BEM predictability & Tailwind utility token chains' },
+        { key: 'structure', label: 'STRUCTURE & AST', desc: 'DOM tree invariants & wrapper encapsulation ratios' },
+        { key: 'visual', label: 'VISUAL TOPOLOGY', desc: 'Bento box symmetry & standard 3-tier card spacing' },
+        { key: 'content', label: 'SYNTHETIC COPYWRITING', desc: 'LLM marketing idiom clustering & syntactic tropes' },
+      ],
     },
     methodologyModal: {
       sopTag: '[STANDARD OPERATING PROCEDURE]',
@@ -693,6 +880,14 @@ export const DICTIONARY: Record<Language, Translations> = {
       legalText: 'ThisAI? is an independent forensic observatory. All analyses are based on public HTML, CSS, and DOM topology.',
       copyright: '© 2026 THISAI? INVESTIGATIVE LAB. ALL RIGHTS RESERVED.',
       privacy: 'Privacy & Data Ethics',
+    },
+    cursor: {
+      examine: 'EXAMINE',
+      investigate: 'INVESTIGATE',
+      read: 'READ',
+      inspect: 'INSPECT',
+      select: 'SELECT',
+      close: 'CLOSE',
     },
   },
 };

@@ -39,7 +39,8 @@ export default function LiveFeedTicker({ onSelectDomain }: LiveFeedTickerProps) 
 
   useEffect(() => {
     fetchScans();
-    const interval = setInterval(fetchScans, 3000);
+    // Re-check recent scans every 5 minutes (300,000 ms)
+    const interval = setInterval(fetchScans, 300000);
     return () => clearInterval(interval);
   }, []);
 

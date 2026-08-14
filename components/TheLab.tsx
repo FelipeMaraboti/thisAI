@@ -30,7 +30,7 @@ export default function TheLab() {
 
         {/* Magazine Grid Articles */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          {LAB_ARTICLES.map((art) => (
+          {t.lab.articles.map((art) => (
             <article
               key={art.id}
               onClick={() => setSelectedArticle(art)}
