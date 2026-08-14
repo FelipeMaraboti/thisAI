@@ -39,8 +39,9 @@ export async function POST(req: NextRequest) {
     // Analyze target
     const result = await analyzeWebsiteForensics(validation.cleanUrl, validation.domain);
 
-    // Register in the secure real-time 4-item FIFO queue
-    addRecentScan(result.domain, result.targetUrl, result.overallScore, result.verdict);
+    // Register in the secure dynamic investigations store & FIFO queue
+    const { registerInvestigation } = await import('@/lib/forensics/recent-scans');
+    registerInvestigation(result);
 
     return NextResponse.json(result, { status: 200 });
   } catch (err: any) {

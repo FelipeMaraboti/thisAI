@@ -1,3 +1,6 @@
+import { InvestigationResult } from './types';
+import { FEATURED_INVESTIGATIONS } from './presets';
+
 export interface RecentScanItem {
   id: string;
   domain: string;
@@ -9,56 +12,17 @@ export interface RecentScanItem {
   isHighSignal: boolean;
 }
 
-// Thread-safe in-memory FIFO queue capped at max 4 items
+// In-memory FIFO queue for dynamic investigation results
+const MAX_INVESTIGATIONS_STORE = 10;
 const MAX_RECENT_SCANS = 4;
 
-// Initial high-grade sample seed
-let recentScansQueue: RecentScanItem[] = [
-  {
-    id: 'sc-1',
-    domain: 'stellar-studio.design',
-    url: 'https://stellar-studio.design',
-    score: 84,
-    verdict: 'HIGH AI SIGNALS',
-    timestamp: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
-    timeAgo: '2m ago',
-    isHighSignal: true,
-  },
-  {
-    id: 'sc-2',
-    domain: 'modern-wealth.io',
-    url: 'https://modern-wealth.io',
-    score: 78,
-    verdict: 'HIGH AI SIGNALS',
-    timestamp: new Date(Date.now() - 6 * 60 * 1000).toISOString(),
-    timeAgo: '6m ago',
-    isHighSignal: true,
-  },
-  {
-    id: 'sc-3',
-    domain: 'linear.app',
-    url: 'https://linear.app',
-    score: 18,
-    verdict: 'LOW AI SIGNALS',
-    timestamp: new Date(Date.now() - 14 * 60 * 1000).toISOString(),
-    timeAgo: '14m ago',
-    isHighSignal: false,
-  },
-  {
-    id: 'sc-4',
-    domain: 'nexus-flow.ai',
-    url: 'https://nexus-flow.ai',
-    score: 92,
-    verdict: 'HIGH AI SIGNALS',
-    timestamp: new Date(Date.now() - 28 * 60 * 1000).toISOString(),
-    timeAgo: '28m ago',
-    isHighSignal: true,
-  },
-];
+// Store full dynamic investigation results (seeded with initial featured ones)
+let dynamicInvestigations: InvestigationResult[] = FEATURED_INVESTIGATIONS.map(
+  (preset) => preset.result
+);
 
-// Sanitizer for domain/URL
+// Sanitizer for domain
 export function sanitizeDomain(inputDomain: string): string {
-  // Strip any script tags, HTML entities, or illegal chars
   return inputDomain
     .replace(/[^a-zA-Z0-9.-]/g, '')
     .toLowerCase()
@@ -66,26 +30,32 @@ export function sanitizeDomain(inputDomain: string): string {
 }
 
 export function getRecentScans(): RecentScanItem[] {
-  return [...recentScansQueue];
+  return dynamicInvestigations.slice(0, MAX_RECENT_SCANS).map((inv) => ({
+    id: inv.id,
+    domain: inv.domain,
+    url: inv.targetUrl,
+    score: inv.overallScore,
+    verdict: inv.verdict,
+    timestamp: inv.timestampUtc,
+    timeAgo: 'recém-analisado',
+    isHighSignal: inv.overallScore >= 70,
+  }));
 }
 
-export function addRecentScan(domain: string, url: string, score: number, verdict: string): RecentScanItem {
-  const cleanDom = sanitizeDomain(domain);
-  const isHigh = score >= 70;
+export function getLatestInvestigations(): InvestigationResult[] {
+  return [...dynamicInvestigations];
+}
 
-  const newItem: RecentScanItem = {
-    id: `scan-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+export function registerInvestigation(result: InvestigationResult): void {
+  const cleanDom = sanitizeDomain(result.domain);
+  const updatedResult: InvestigationResult = {
+    ...result,
     domain: cleanDom,
-    url: url,
-    score: Math.max(0, Math.min(100, Math.round(score))),
-    verdict: verdict || (isHigh ? 'HIGH AI SIGNALS' : 'LOW AI SIGNALS'),
-    timestamp: new Date().toISOString(),
-    timeAgo: 'just now',
-    isHighSignal: isHigh,
   };
 
-  // Prepend to top (FIFO queue) and maintain strictly MAX_RECENT_SCANS (4)
-  recentScansQueue = [newItem, ...recentScansQueue.filter((item) => item.domain !== cleanDom)].slice(0, MAX_RECENT_SCANS);
-
-  return newItem;
+  // Prepend to dynamic list, deduplicate by domain, and cap at max store
+  dynamicInvestigations = [
+    updatedResult,
+    ...dynamicInvestigations.filter((item) => item.domain !== cleanDom),
+  ].slice(0, MAX_INVESTIGATIONS_STORE);
 }
