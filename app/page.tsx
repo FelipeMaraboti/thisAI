@@ -16,6 +16,7 @@ import InvestigationReport from '@/components/InvestigationReport';
 import MethodologyModal from '@/components/MethodologyModal';
 import { InvestigationResult } from '@/lib/forensics/types';
 import { FEATURED_INVESTIGATIONS } from '@/lib/forensics/presets';
+import { AlertCircle, X } from 'lucide-react';
 
 export default function HomePage() {
   const [isMethodologyOpen, setIsMethodologyOpen] = useState(false);
@@ -23,11 +24,13 @@ export default function HomePage() {
   const [scanningTarget, setScanningTarget] = useState<string>('');
   const [activeReport, setActiveReport] = useState<InvestigationResult | null>(null);
   const [pendingResult, setPendingResult] = useState<InvestigationResult | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Trigger investigation
   const handleInvestigate = async (targetUrl: string) => {
     setScanningTarget(targetUrl);
     setIsScanning(true);
+    setErrorMessage(null);
 
     try {
       const response = await fetch('/api/investigate', {
@@ -38,7 +41,14 @@ export default function HomePage() {
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || 'Failed to analyze website.');
+        
+        if (response.status === 429) {
+          setIsScanning(false);
+          setErrorMessage(errorData.error || 'Limite de requisições por IP excedido.');
+          return;
+        }
+
+        throw new Error(errorData.error || 'Falha ao analisar o site.');
       }
 
       const result: InvestigationResult = await response.json();
@@ -131,13 +141,29 @@ export default function HomePage() {
       {/* Header */}
       <Navbar onOpenMethodology={() => setIsMethodologyOpen(true)} />
 
+      {/* Rate Limit / Security Alert Banner */}
+      {errorMessage && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-[300] max-w-xl w-[90%] p-4 bg-[#1a0f0f] border border-red-500/60 text-red-200 font-mono text-xs flex items-start justify-between gap-3 shadow-2xl animate-fadeIn">
+          <div className="flex items-start gap-2.5">
+            <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+            <span>{errorMessage}</span>
+          </div>
+          <button
+            onClick={() => setErrorMessage(null)}
+            className="text-red-400 hover:text-white transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+
       {/* Hero Section */}
       <Hero onInvestigate={handleInvestigate} isLoading={isScanning} />
 
-      {/* Real-time Ticker */}
+      {/* Real-time Ticker (Polls every 5 min) */}
       <LiveFeedTicker onSelectDomain={handleSelectDomain} />
 
-      {/* Latest Investigations (Magazine Showcase) */}
+      {/* Latest Investigations (Dynamic Magazine Showcase - Polls every 5 min) */}
       <LatestInvestigations onSelectInvestigation={handleSelectDomain} />
 
       {/* We Don't Guess. We Investigate (GSAP 6 Pillars) */}
