@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateTargetUrl } from '@/lib/security/ssrf';
 import { analyzeWebsiteForensics } from '@/lib/forensics/analyzer';
-import { addRecentScan } from '@/lib/forensics/recent-scans';
+import { registerInvestigation } from '@/lib/forensics/recent-scans';
 
 export async function POST(req: NextRequest) {
   try {
@@ -40,7 +40,6 @@ export async function POST(req: NextRequest) {
     const result = await analyzeWebsiteForensics(validation.cleanUrl, validation.domain);
 
     // Register in the secure dynamic investigations store & FIFO queue
-    const { registerInvestigation } = await import('@/lib/forensics/recent-scans');
     registerInvestigation(result);
 
     return NextResponse.json(result, { status: 200 });
